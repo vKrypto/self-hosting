@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == worker]
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "8096:8096"
+    volumes:
+      - jellyfin_config:/config
+      - jellyfin_cache:/cache
+      - /srv/jellyfin/media:/media:ro
+    environment:
+      - TZ=UTC
+    networks:
+      - jellyfin_net
+
+volumes:
+  jellyfin_config:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./config
+      o: bind
+
+  jellyfin_cache:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./cache
+      o: bind
+
+networks:
+  jellyfin_net:
+    driver: overlay

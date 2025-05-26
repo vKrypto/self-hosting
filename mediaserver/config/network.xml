@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NetworkConfiguration>
+  <EnableIPv6>false</EnableIPv6>
+  <PublicPort>8096</PublicPort>
+  <HttpServerPortNumber>8096</HttpServerPortNumber>
+  <EnableHttps>false</EnableHttps>
+  <IsRemoteAccessEnabled>true</IsRemoteAccessEnabled>
+  <LocalNetworkSubnets>
+    <string>192.168.0.0/16</string>
+    <string>10.0.0.0/8</string>
+  </LocalNetworkSubnets>
+</NetworkConfiguration>
