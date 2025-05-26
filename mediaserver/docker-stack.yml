@@ -25,14 +25,14 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: ./config
+      device: /srv/jellyfin/config
       o: bind
 
   jellyfin_cache:
     driver: local
     driver_opts:
       type: none
-      device: ./cache
+      device: /srv/jellyfin/cache
       o: bind
 
 networks:
