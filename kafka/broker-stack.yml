@@ -1,0 +1,53 @@
+version: '3.8'
+
+networks:
+  kafka_net:
+    driver: overlay
+    ipam:
+      config:
+        - subnet: 10.10.10.0/24
+    attachable: true
+
+volumes:
+  kafka_data:
+    driver: local
+  zookeeper_data:
+    driver: local
+
+services:
+
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: kafka_zookeeper
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      kafka_net:
+        ipv4_address: 10.10.10.10
+    volumes:
+      - zookeeper_data:/bitnami/zookeeper
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka_broker
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=10.10.10.10:2181
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka_broker:9092
+      - KAFKA_CFG_NUM_PARTITIONS=50
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    networks:
+      kafka_net:
+        ipv4_address: 10.10.10.20
+    volumes:
+      - kafka_data:/bitnami/kafka
+    depends_on:
+      - zookeeper
+    deploy:
+      placement:
+        constraints: [node.role == manager]
