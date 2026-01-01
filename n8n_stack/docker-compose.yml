@@ -18,11 +18,15 @@ services:
       - n8n_redis_data:/data
 
   n8n:
+
     image: n8nio/n8n:latest
     restart: always
     ports:
       - 5678:5678
     environment:
+      N8N_ENABLE_NODE_DEV_MODE: true
+      N8N_USE_BUNDLED_NODE: false
+
       DB_TYPE: postgresdb
       DB_POSTGRESDB_HOST: postgres
       DB_POSTGRESDB_PORT: 5432
@@ -45,6 +49,7 @@ services:
 
     volumes:
       - n8n_data:/home/node/.n8n
+      - ./n8n_custom:/data
     depends_on:
       - postgres
       - redis
